@@ -16,17 +16,17 @@ public partial class BankContext : DbContext
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; } = null!;
+    public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<AccountType> AccountTypes { get; set; } = null!;
+    public virtual DbSet<AccountType> AccountTypes { get; set; }
 
-    public virtual DbSet<Administrator> Administrators { get; set; } = null!;
+    public virtual DbSet<Administrator> Administrators { get; set; }
 
-    public virtual DbSet<BankTransaction> BankTransactions { get; set; } = null!;
+    public virtual DbSet<BankTransaction> BankTransactions { get; set; }
 
-    public virtual DbSet<Client> Clients { get; set; } = null!;
+    public virtual DbSet<Client> Clients { get; set; }
 
-    public virtual DbSet<TransactionType> TransactionTypes { get; set; } = null!;
+    public virtual DbSet<TransactionType> TransactionTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,7 +34,7 @@ public partial class BankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27C4E086E7");
 
-            entity.ToTable("Account");
+            entity.ToTable("Account", tb => tb.HasTrigger("AccountInsteadOfDelete"));
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Balance).HasColumnType("decimal(10, 2)");
@@ -138,6 +138,9 @@ public partial class BankContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(40)
+                .IsUnicode(false);
+            entity.Property(e => e.Pwd)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.RegDate)
                 .HasDefaultValueSql("(getdate())")

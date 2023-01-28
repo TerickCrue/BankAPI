@@ -2,6 +2,7 @@ using System.Text;
 using BankAPI.Data;
 using BankAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AccountTypeService>();
 builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<TransactionService>();
+builder.Services.AddScoped<TransactionTypeService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
@@ -32,11 +35,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
+    })
+    .AddJwtBearer("user", options => 
+    {
+        options.TokenValidationParameters = new TokenValidationParameters 
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key2"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
 
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options => 
+{
     options.AddPolicy("SuperAdmin", policy => policy.RequireClaim("AdminType", "Super"));
+    options.AddPolicy("AuthUser", policy => policy.RequireAuthenticatedUser().AddAuthenticationSchemes("user"));
+
 });
+
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 using BankAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using BankAPI.Data.BankModels;
+using BC = BCrypt.Net.BCrypt;
 namespace BankAPI.Services;
 
 public class ClientService
@@ -24,7 +25,11 @@ public class ClientService
 
     public async Task<Client> Create(Client newClient)
     {
-        _context.Clients.Add(newClient);
+        var client = new Client();
+        client = newClient;
+        client.Pwd = BC.HashPassword(newClient.Pwd);
+
+        _context.Clients.Add(client);
         await _context.SaveChangesAsync();
 
         return newClient;

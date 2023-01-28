@@ -16,13 +16,15 @@ public class ClientController : ControllerBase
     {
         _service = service;
     }
-
+    
+    [Authorize(Policy = "SuperAdmin")]
     [HttpGet("getall")]
     public async Task<IEnumerable<Client>> Get()
     {
         return await _service.GetAll();
     }
 
+    [Authorize(Policy = "SuperAdmin")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Client>> GetById(int id)
     {

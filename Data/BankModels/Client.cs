@@ -17,9 +17,12 @@ public partial class Client
 
     [MaxLength(50, ErrorMessage = "El Email no puede contener mas de 50 caracteres")]
     [EmailAddress(ErrorMessage = "Fomato de correo incorrecto")]
-    public string? Email { get; set; }
+    public string? Email { get; set; } = null!;
 
     public DateTime RegDate { get; set; }
+
+    [MaxLength(60, ErrorMessage = "La contraseña no puede contener mas de 60 caracteres")]
+    public string Pwd { get; set; } = null!;
 
     [JsonIgnore]
     public virtual ICollection<Account> Accounts { get; } = new List<Account>();

@@ -22,12 +22,14 @@ public class AccountController : ControllerBase
         this.accountTypeService = accountTypeService;
     }
 
+    [Authorize(Policy = "SuperAdmin")]
     [HttpGet("getall")]
     public async Task<IEnumerable<AccountDtoOut>> Get()
     {
         return await accountService.GetAll();
     }
 
+    [Authorize(Policy = "SuperAdmin")]
     [HttpGet("{id}")]
     public async Task<ActionResult<AccountDtoOut>> GetById(int id)
     {

@@ -10,7 +10,7 @@ public partial class Account
 
     public int AccountType { get; set; }
 
-    public int? ClientId { get; set; }
+    public int? ClientId { get; set; } = null!;
 
     public decimal Balance { get; set; }
 
@@ -23,5 +23,5 @@ public partial class Account
     public virtual ICollection<BankTransaction> BankTransactions { get; } = new List<BankTransaction>();
 
     [JsonIgnore]
-    public virtual Client? Client { get; set; }
+    public virtual Client? Client { get; set; } = null!;
 }
