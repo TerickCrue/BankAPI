@@ -86,4 +86,19 @@ public class AccountService
         }
     }
 
+    public async Task<IEnumerable<AccountDtoOut>> GetAccountsByClientId(int clientId)
+    {
+        
+        return await _context.Accounts.
+        Where(a => a.ClientId == clientId).
+        Select(a => new AccountDtoOut 
+        {
+            Id = a.Id,
+            AccountName = a.AccountTypeNavigation.Name,
+            ClientName = a.Client.Name,
+            Balance = a.Balance,
+            RegDate = a.RegDate
+        }).ToListAsync();
+    }
+
 }
